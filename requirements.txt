@@ -1,3 +1,4 @@
+dbnomics
 streamlit
 pandas
 plotly

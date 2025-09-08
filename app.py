@@ -44,6 +44,7 @@ with tab0:
     st.markdown("---")
 
     st.header("Full Dataset")
+    st.write(len(countries))
     st.dataframe(df, use_container_width=True)
 
 # --- Tab 1: Trends ---
@@ -54,7 +55,7 @@ with tab1:
     regions = st.multiselect(
         'Choose Country or Region for Trends',
         list(df['Country Name'].unique()),
-        default=['United Kingdom', 'United States', 'Japan', 'Germany', 'Australia', 'China', 'India']
+        default=['China', 'Germany', 'India', 'Japan', 'United States']
     )
     # --- Create a color map for consistent colors on the line chart ---
     # This ensures that each country/region always has the same color.

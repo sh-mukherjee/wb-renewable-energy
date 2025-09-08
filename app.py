@@ -3,20 +3,42 @@ import streamlit as st
 import plotly.express as px
 from dbnomics import fetch_series
 
+#identifier for the dataset
+indicator = ["EG.FEC.RNEW.ZS"] 
+
+# list of countries (3 character ISO codes)
+countries = ['ABW', 'AFG', 'AGO', 'ALB', 'AND', 'ARE', 'ARG', 'ARM', 'ASM', 'ATG', 'AUS', 'AUT', 'AZE', 
+             'BDI', 'BEL', 'BEN', 'BFA', 'BGD', 'BGR', 'BHR', 'BHS', 'BIH', 'BLR', 'BLZ', 'BMU', 'BOL', 'BRA', 'BRB', 'BRN', 'BTN', 'BWA', 
+             'CAF', 'CAN', 'CHE', 'CHL', 'CHN', 'CIV', 'CMR', 'COD', 'COG', 'COL', 'COM', 'CPV', 'CRI', 'CUB', 'CUW', 'CYM', 'CYP', 'CZE', 
+             'DEU', 'DJI', 'DMA', 'DNK', 'DOM', 'DZA', 'ECU', 'EGY', 'ERI', 'ESP', 'EST', 'ETH', 
+             'FIN', 'FJI', 'FRA', 'FRO', 'FSM', 'GAB', 'GBR', 'GEO', 'GHA', 'GIB', 'GIN', 'GMB', 'GNB', 'GNQ', 'GRC', 'GRD', 'GRL', 'GTM', 'GUM', 'GUY', 
+             'HKG', 'HND', 'HRV', 'HTI', 'HUN', 'IDN', 'IND', 'IRL', 'IRN', 'IRQ', 'ISL', 'ISR', 'ITA', 'JAM', 'JOR', 'JPN', 
+             'KAZ', 'KEN', 'KGZ', 'KHM', 'KIR', 'KNA', 'KOR', 'KWT', 'LAO', 'LBN', 'LBR', 'LBY', 'LCA', 'LIE', 'LKA', 'LSO', 'LTU', 'LUX', 'LVA', 
+             'MAC', 'MAF', 'MAR', 'MCO', 'MDA', 'MDG', 'MDV', 'MEX', 'MHL', 'MKD', 'MLI', 'MLT', 'MMR', 'MNE', 'MNG', 'MNP', 'MOZ', 'MRT', 'MUS', 'MWI', 'MYS', 
+             'NAM', 'NCL', 'NER', 'NGA', 'NIC', 'NLD', 'NOR', 'NPL', 'NRU', 'NZL', 'OMN', 'PAK', 'PAN', 'PER', 'PHL', 'PLW', 'PNG', 'POL', 'PRI', 'PRK', 'PRT', 'PRY', 'PSE', 'PYF', 
+             'QAT', 'ROU', 'RUS', 'RWA', 'SAU', 'SDN', 'SEN', 'SGP', 'SLB', 'SLE', 'SLV', 'SMR', 'SOM', 'SRB', 'SSD', 'STP', 'SUR', 'SVK', 'SVN', 'SWE', 'SWZ', 'SXM', 'SYC', 'SYR', 
+             'TCA', 'TCD', 'TGO', 'THA', 'TJK', 'TKM', 'TLS', 'TON', 'TTO', 'TUN', 'TUR', 'TUV', 'TZA', 'UGA', 'UKR', 'URY', 'USA', 'UZB', 
+             'VCT', 'VEN', 'VGB', 'VIR', 'VNM', 'VUT', 'WSM', 'XKX', 'YEM', 'ZAF', 'ZMB', 'ZWE']
+
+
 # --- Load Data ---
 @st.cache_data
 def load_data():
-    countries = ['ABW', 'AFG', 'AGO', 'ALB', 'AND', 'ARE', 'ARG', 'ARM', 'ASM', 'ATG', 'AUS', 'AUT', 'AZE', 'BDI', 'BEL', 'BEN', 'BFA', 'BGD', 'BGR', 'BHR', 'BHS', 'BIH', 'BLR', 'BLZ', 'BMU', 'BOL', 'BRA', 'BRB', 'BRN', 'BTN', 'BWA', 'CAF', 'CAN', 'CHE', 'CHL', 'CHN', 'CIV', 'CMR', 'COD', 'COG', 'COL', 'COM', 'CPV', 'CRI', 'CUB', 'CUW', 'CYM', 'CYP', 'CZE', 'DEU', 'DJI', 'DMA', 'DNK', 'DOM', 'DZA', 'ECU', 'EGY', 'ERI', 'ESP', 'EST', 'ETH', 'FIN', 'FJI', 'FRA', 'FRO', 'FSM', 'GAB', 'GBR', 'GEO', 'GHA', 'GIB', 'GIN', 'GMB', 'GNB', 'GNQ', 'GRC', 'GRD', 'GRL', 'GTM', 'GUM', 'GUY', 'HKG', 'HND', 'HRV', 'HTI', 'HUN', 'IDN', 'IND', 'IRL', 'IRN', 'IRQ', 'ISL', 'ISR', 'ITA', 'JAM', 'JOR', 'JPN', 'KAZ', 'KEN', 'KGZ', 'KHM', 'KIR', 'KNA', 'KOR', 'KWT', 'LAO', 'LBN', 'LBR', 'LBY', 'LCA', 'LIE', 'LKA', 'LSO', 'LTU', 'LUX', 'LVA', 'MAC', 'MAF', 'MAR', 'MCO', 'MDA', 'MDG', 'MDV', 'MEX', 'MHL', 'MKD', 'MLI', 'MLT', 'MMR', 'MNE', 'MNG', 'MNP', 'MOZ', 'MRT', 'MUS', 'MWI', 'MYS', 'NAM', 'NCL', 'NER', 'NGA', 'NIC', 'NLD', 'NOR', 'NPL', 'NRU', 'NZL', 'OMN', 'PAK', 'PAN', 'PER', 'PHL', 'PLW', 'PNG', 'POL', 'PRI', 'PRK', 'PRT', 'PRY', 'PSE', 'PYF', 'QAT', 'ROU', 'RUS', 'RWA', 'SAU', 'SDN', 'SEN', 'SGP', 'SLB', 'SLE', 'SLV', 'SMR', 'SOM', 'SRB', 'SSD', 'STP', 'SUR', 'SVK', 'SVN', 'SWE', 'SWZ', 'SXM', 'SYC', 'SYR', 'TCA', 'TCD', 'TGO', 'THA', 'TJK', 'TKM', 'TLS', 'TON', 'TTO', 'TUN', 'TUR', 'TUV', 'TZA', 'UGA', 'UKR', 'URY', 'USA', 'UZB', 'VCT', 'VEN', 'VGB', 'VIR', 'VNM', 'VUT', 'WSM', 'XKX', 'YEM', 'ZAF', 'ZMB', 'ZWE']
-
     df = fetch_series('WB', 'WDI', dimensions={
          "frequency": ["A"],
-         "indicator": ["EG.FEC.RNEW.ZS"],
+         "indicator": indicator,
          "country": countries
         },
          max_nb_series=300).query("period >= '1990'").query("period <= '2021'").reset_index(drop=True)
 
     df = df[['period', 'value', 'country', 'country (label)']]
     df = df.rename(columns={'period': 'Year', 'value': 'Value', 'country': 'Country Code', 'country (label)': 'Country Name'})
+    
+    # Convert the column to datetime objects
+    df['Year'] = pd.to_datetime(df['Year'])
+
+    # Extract only the year and store it back into the 'Year' column
+    df['Year'] = df['Year'].dt.strftime('%Y') 
     return df
 
 df = load_data()
@@ -43,8 +65,8 @@ with tab0:
 
     st.markdown("---")
 
-    st.header("Full Dataset")
-    st.write(len(countries))
+    st.header("Dataset for 215 Countries from 1990 to 2021")
+    #st.write(len(countries))
     st.dataframe(df, use_container_width=True)
 
 # --- Tab 1: Trends ---
@@ -60,8 +82,9 @@ with tab1:
     # --- Create a color map for consistent colors on the line chart ---
     # This ensures that each country/region always has the same color.
     all_regions = list(df['Country Name'].unique())
-    colors = px.colors.qualitative.Plotly
+    colors = px.colors.qualitative.Light24
     color_map = {region: colors[i % len(colors)] for i, region in enumerate(all_regions)}
+    
     
     # Create the line chart
     new_df = df[df['Country Name'].isin(regions)]
@@ -98,7 +121,9 @@ with tab2:
         color="Value",
         hover_name="Country Name",
         color_continuous_scale='Greens',
-        title=f'Renewable Energy Consumption by Country ({years})'
+        title=f'Renewable Energy Consumption by Country ({years})',
+        width = 1200,
+        height = 800
     )
     st.plotly_chart(figmap, use_container_width=True)
 
@@ -111,9 +136,9 @@ with tab3:
     st.write("Play around with the countries and the years to see what percentage of the total energy consumption was from renewable energy sources. Here are some observations:")
 
     st.markdown("""
-    * Richer, developed countries generally have a **low percentage** of their total energy coming from renewable sources, though some show an increasing trend.
+    * Richer, developed countries generally have a **low percentage** of their total energy coming from renewable sources, though some (e.g. Germany) show an increasing trend.
     * **Iceland**, which makes use of geothermal energy, has a higher proportion of its consumption coming from renewable energy.
-    * Many poorer and less-developed countries have **much higher levels** of renewable energy consumption as a percentage of their total energy consumption (e.g., Nepal). This could be due to a combination of hydroelectric power and the use of biomass for domestic energy needs.
+    * Many poorer and less-developed countries (e.g. Nepal) have **much higher levels** of renewable energy consumption as a percentage of their total energy consumption. This could be due to a combination of hydroelectric power and the use of biomass for domestic energy needs.
     * The line charts for **India** and **China** show a decreasing trend over the years as they have grown richer, perhaps due to rapidly increasing energy demand that cannot be satisfied fast enough by renewable energy.
     """)
 
